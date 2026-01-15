@@ -175,11 +175,26 @@
     // Menu toggle
     const menuBtn = document.getElementById('menuToggle');
     const nav = document.getElementById('mainNav');
-    if (menuBtn && nav) {
+    const siteHeader = document.querySelector('.site-header');
+    if (menuBtn && nav && siteHeader) {
       menuBtn.addEventListener('click', () => {
-        const open = nav.hidden;
-        nav.hidden = !open;
-        menuBtn.setAttribute('aria-expanded', String(open));
+        const isOpen = siteHeader.classList.toggle('nav-open');
+        menuBtn.setAttribute('aria-expanded', String(isOpen));
+        // Optionally trap focus or close on outside click
+      });
+      // Close menu when clicking a nav link (for single-page feel)
+      nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          siteHeader.classList.remove('nav-open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+      // Optional: close menu on outside click
+      document.addEventListener('click', (e) => {
+        if (siteHeader.classList.contains('nav-open') && !siteHeader.contains(e.target)) {
+          siteHeader.classList.remove('nav-open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        }
       });
     }
 
@@ -385,3 +400,4 @@
   </script>
 </body>
 </html>
+
