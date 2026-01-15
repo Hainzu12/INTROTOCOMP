@@ -176,25 +176,35 @@
       });
     }
 
-    // Quantity selector functionality
+    // Quantity selector functionality (use currentTarget to be robust)
     document.querySelectorAll('.qty-btn').forEach(button => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
-        const product = e.target.dataset.product;
-        const change = parseInt(e.target.dataset.change);
+        const el = e.currentTarget;
+        const product = el.dataset.product;
+        const change = parseInt(el.dataset.change);
         const input = document.querySelector(`input[data-product="${product}"]`);
-        const newValue = Math.max(1, parseInt(input.value) + change);
+        const newValue = Math.max(1, parseInt(input.value) + change || 1);
         input.value = newValue;
       });
     });
 
-    // Add to cart functionality
+    // Allow manual edits on quantity inputs
+    document.querySelectorAll('.qty-input').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const val = Math.max(1, parseInt(e.target.value) || 1);
+        e.target.value = val;
+      });
+    });
+
+    // Add to cart functionality (robust to clicking inner elements)
     document.querySelectorAll('.add-to-cart').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        const product = e.target.dataset.product;
-        const qty = parseInt(document.querySelector(`input[data-product="${product}"]`).value);
-        const card = e.target.closest('.card');
+        const el = e.currentTarget;
+        const product = el.dataset.product;
+        const qty = parseInt(document.querySelector(`input[data-product="${product}"]`).value) || 1;
+        const card = el.closest('.card');
         const title = card.querySelector('h3').textContent;
         const price = parseFloat(card.querySelector('.price').textContent.replace('₱', ''));
         const image = card.querySelector('.product-img').src;
@@ -211,8 +221,11 @@
         }
         
         localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        // Minimal feedback instead of alert on mobile: use alert for now
         alert(`Added ${qty} ${title}(s) to cart! \n\nTotal items: ${cart.reduce((sum, item) => sum + item.qty, 0)}`);
-        document.querySelector(`input[data-product="${product}"]`).value = 1;
+        const qtyInput = document.querySelector(`input[data-product="${product}"]`);
+        if (qtyInput) qtyInput.value = 1;
       });
     });
 
