@@ -88,20 +88,20 @@
 
         <div class="team-grid">
           <div class="card team-card">
-            <img class="avatar" src="cookies/CookiesandCream.png" alt="Baker Photo">
-            <h3>Max Barra</h3>
+            <img class="avatar" src="cookies/max.jpg" alt="MAX">
+            <h3>Maxine Venice T. Barra</h3>
             <p style="margin:6px 0;color:#5b3b2d;">Head Baker & Founder — Max designs the recipes and oversees every batch.</p>
           </div>
 
           <div class="card team-card">
-            <img class="avatar" src="cookies/CookiesandCream.png" alt="Baker Photo">
-            <h3>Kieth</h3>
+            <img class="avatar" src="cookies/kieth.jpg" alt="Kieth">
+            <h3>Keith Lawrence S. Decena</h3>
             <p style="margin:6px 0;color:#5b3b2d;">Operations & Community — Kieth runs pop-ups and keeps everything running smooth.</p>
           </div>
 
           <div class="card team-card">
-            <img class="avatar" src="cookies/CookiesandCream.png" alt="Baker Photo">
-            <h3>Venice</h3>
+            <img class="avatar" src="cookies/venice.jpg" alt="Venice">
+            <h3>Venice Iya Rolda</h3>
             <p style="margin:6px 0;color:#5b3b2d;">R&D & New Flavors — Venice tests bold flavor combos and makes tasting a joy.</p>
           </div>
         </div>
@@ -191,13 +191,28 @@
 
   <script>
     // Menu toggle
-    const btn = document.getElementById('menuToggle');
+    // Menu toggle (mobile hamburger)
+    const menuBtn = document.getElementById('menuToggle');
     const nav = document.getElementById('mainNav');
-    btn.addEventListener('click', () => {
-      const open = nav.hidden;
-      nav.hidden = !open;
-      btn.setAttribute('aria-expanded', String(open));
-    });
+    const siteHeader = document.querySelector('.site-header');
+    if (menuBtn && nav && siteHeader) {
+      menuBtn.addEventListener('click', () => {
+        const isOpen = siteHeader.classList.toggle('nav-open');
+        menuBtn.setAttribute('aria-expanded', String(isOpen));
+      });
+      nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          siteHeader.classList.remove('nav-open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+      document.addEventListener('click', (e) => {
+        if (siteHeader.classList.contains('nav-open') && !siteHeader.contains(e.target)) {
+          siteHeader.classList.remove('nav-open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
 
     // Modal functionality
     const loginBtn = document.getElementById('loginBtn');
