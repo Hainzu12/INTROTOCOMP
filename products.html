@@ -166,13 +166,26 @@
   </footer>
 
   <script>
-    const btn = document.getElementById('menuToggle');
+    // Menu toggle (mobile hamburger)
+    const menuBtn = document.getElementById('menuToggle');
     const nav = document.getElementById('mainNav');
-    if (btn && nav) {
-      btn.addEventListener('click', () => {
-        const open = nav.hidden;
-        nav.hidden = !open;
-        btn.setAttribute('aria-expanded', String(open));
+    const siteHeader = document.querySelector('.site-header');
+    if (menuBtn && nav && siteHeader) {
+      menuBtn.addEventListener('click', () => {
+        const isOpen = siteHeader.classList.toggle('nav-open');
+        menuBtn.setAttribute('aria-expanded', String(isOpen));
+      });
+      nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          siteHeader.classList.remove('nav-open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+      document.addEventListener('click', (e) => {
+        if (siteHeader.classList.contains('nav-open') && !siteHeader.contains(e.target)) {
+          siteHeader.classList.remove('nav-open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        }
       });
     }
 
